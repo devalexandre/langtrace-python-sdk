@@ -1,4 +1,5 @@
 import json
+from importlib_metadata import version as v
 from langtrace_python_sdk.utils.llm import (
     get_langtrace_attributes,
     get_llm_request_attributes,
@@ -9,11 +10,12 @@ from langtrace_python_sdk.utils.llm import (
 )
 from langtrace_python_sdk.utils import handle_span_error
 
-from opentelemetry.trace import Tracer, SpanKind
-from opentelemetry.sdk.trace import Span
-from langtrace.trace_attributes import SpanAttributes
+from opentelemetry import baggage
+from opentelemetry.trace import Span, SpanKind, Tracer
+from opentelemetry.trace.status import Status, StatusCode
+from langtrace.trace_attributes import FrameworkSpanAttributes, SpanAttributes
 
-from typing import Iterator
+from typing import Dict, Any, Iterator, Optional
 
 
 def _safe_serialize(obj):
